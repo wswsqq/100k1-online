@@ -1,195 +1,91 @@
+<!-- public/player.html -->
 <!doctype html>
 <html lang="ru">
 <head>
-  <link rel="stylesheet" href="/style.css">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>100 к 1 — Игрок</title>
 
   <style>
-    .wrap { max-width: 780px; margin: 0 auto; padding: 20px; }
-    h1,h2 { margin-top: 0; }
-    .card { background:#111a2e; border-radius:14px; padding:16px; margin-bottom:16px; }
-    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .muted { opacity:.8; }
-    .badge { display:inline-block; padding:4px 10px; border:1px solid #1f2a44; border-radius:999px; }
-
-    button { padding:10px 14px; border-radius:10px; border:none; background:#22c55e; color:#fff; font-size:16px; cursor:pointer; }
-    button.secondary { background:#475569; }
-    button:disabled { opacity:.4; cursor:not-allowed; }
-
+    body{
+      margin:0;font-family:system-ui,Arial,sans-serif;color:#fff;
+      background:
+        radial-gradient(1200px 800px at 10% 10%, rgba(59,130,246,1), transparent 60%),
+        radial-gradient(1000px 900px at 90% 35%, rgba(168,85,247,1), transparent 65%),
+        radial-gradient(900px 900px at 50% 90%, rgba(217,70,239,0.95), transparent 70%),
+        linear-gradient(180deg,#0b102a,#0b102a);
+      min-height:100vh;
+    }
+    .wrap{max-width:780px;margin:0 auto;padding:20px;}
+    .titleRow{display:flex;align-items:center;justify-content:center;margin:0 0 14px;}
+    h1{margin:0;text-align:center;}
+    .card{background:rgba(17,26,46,.92);border-radius:14px;padding:16px;margin-bottom:16px;border:1px solid #1f2a44;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .muted{opacity:.8;}
+    .badge{display:inline-block;padding:4px 10px;border:1px solid #1f2a44;border-radius:999px;}
+    button{padding:10px 14px;border-radius:10px;border:none;background:#22c55e;color:#fff;font-size:16px;cursor:pointer;}
+    button.secondary{background:#475569;}
+    button.violet{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+    button:disabled{opacity:.45;cursor:not-allowed;}
     input[type="text"]{
-      width:100%;
-      box-sizing:border-box;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid #1f2a44;
-      background:#0b1328;
-      color:#fff;
-      font-size:16px;
-      outline:none;
+      width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid #1f2a44;
+      background:#0b1328;color:#fff;font-size:16px;outline:none;
+    }
+    table{width:100%;border-collapse:collapse;}
+    th,td{padding:8px;border-bottom:1px solid #1f2a44;text-align:left;}
+    .hidden{display:none;}
+
+    .timeBar{width:280px;height:12px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);overflow:hidden;}
+    .timeBarFill{height:100%;width:100%;border-radius:999px;transition:width .35s linear,background-color .25s ease;}
+    .round-pill{
+      display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:999px;
+      border:1px solid #1f2a44;background:rgba(17,26,46,.65);font-weight:900;min-width:54px;
     }
 
-    table { width:100%; border-collapse:collapse; }
-    th,td { padding:8px; border-bottom:1px solid #1f2a44; text-align:left; }
-    .hidden { display:none; }
+    .winner-hero{text-align:center;padding:18px 12px;}
+    .cup{font-size:76px;line-height:1;display:inline-block;filter:drop-shadow(0 12px 28px rgba(0,0,0,.55));transform:translateY(10px) scale(.9);opacity:0;}
+    .winner-title{margin:10px 0 0;font-size:30px;font-weight:800;opacity:0;transform:translateY(8px);}
+    .winner-name{margin:6px 0 0;font-size:22px;opacity:0;transform:translateY(8px);}
+    .winner-score{margin:8px 0 0;font-size:18px;opacity:0;transform:translateY(8px);}
+    #winnerScreen.pop .cup{animation:popIn .7s cubic-bezier(.2,.9,.2,1) forwards;}
+    #winnerScreen.pop .winner-title{animation:slideUp .6s .12s cubic-bezier(.2,.9,.2,1) forwards;}
+    #winnerScreen.pop .winner-name{animation:slideUp .6s .22s cubic-bezier(.2,.9,.2,1) forwards;}
+    #winnerScreen.pop .winner-score{animation:slideUp .6s .32s cubic-bezier(.2,.9,.2,1) forwards;}
+    .podium{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+    .podium .p{flex:1;min-width:220px;border:1px solid #1f2a44;border-radius:12px;padding:12px;}
+    .big{font-size:22px;font-weight:700;}
+    #winnerScreen.pop .podium .p{animation:rise .5s .25s ease-out both;}
+    #winnerScreen.pop .podium .p:nth-child(2){animation-delay:.33s;}
+    #winnerScreen.pop .podium .p:nth-child(3){animation-delay:.41s;}
+    @keyframes popIn{to{opacity:1;transform:translateY(0) scale(1);}}
+    @keyframes slideUp{to{opacity:1;transform:translateY(0);}}
+    @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-    /* ===== Winner Animation ===== */
-    .winner-hero{ text-align:center; padding:18px 12px; }
-    .cup{
-      font-size:76px; line-height:1; display:inline-block;
-      filter: drop-shadow(0 12px 28px rgba(0,0,0,.55));
-      transform: translateY(10px) scale(.9);
-      opacity:0;
-    }
-    .winner-title{ margin:10px 0 0; font-size:30px; font-weight:800; opacity:0; transform: translateY(8px); }
-    .winner-name{ margin:6px 0 0; font-size:22px; opacity:0; transform: translateY(8px); }
-    .winner-score{ margin:8px 0 0; font-size:18px; opacity:0; transform: translateY(8px); }
+    #confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;}
 
-    #winnerScreen.pop .cup{ animation: popIn .7s cubic-bezier(.2,.9,.2,1) forwards; }
-    #winnerScreen.pop .winner-title{ animation: slideUp .6s .12s cubic-bezier(.2,.9,.2,1) forwards; }
-    #winnerScreen.pop .winner-name{ animation: slideUp .6s .22s cubic-bezier(.2,.9,.2,1) forwards; }
-    #winnerScreen.pop .winner-score{ animation: slideUp .6s .32s cubic-bezier(.2,.9,.2,1) forwards; }
-
-    .podium { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .podium .p { flex:1; min-width:220px; border:1px solid #1f2a44; border-radius:12px; padding:12px; }
-    .big { font-size:22px; font-weight:700; }
-
-    #winnerScreen.pop .podium .p{ animation: rise .5s .25s ease-out both; }
-    #winnerScreen.pop .podium .p:nth-child(2){ animation-delay:.33s; }
-    #winnerScreen.pop .podium .p:nth-child(3){ animation-delay:.41s; }
-
-    @keyframes popIn { to{ opacity:1; transform: translateY(0) scale(1);} }
-    @keyframes slideUp { to{ opacity:1; transform: translateY(0);} }
-    @keyframes rise { from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
-
-    /* ===== Confetti canvas ===== */
-    #confetti{
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9999;
-      display:none;
-    }
-
-    /* ===== Violet buttons (Player) ===== */
-    button.violet {
-      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-      color: #fff;
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
-      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-    }
-    button.violet:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      animation: pulseViolet 1.2s infinite;
-    }
-    button.violet:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35); }
-    button.violet:disabled { opacity: .45; box-shadow: none; animation: none; cursor: not-allowed; }
-    @keyframes pulseViolet {
-      0%   { box-shadow: 0 0 0 0 rgba(139,92,246,.55); }
-      70%  { box-shadow: 0 0 0 14px rgba(139,92,246,0); }
-      100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
-    }
-
-    /* =========================================================
-       ===== VolumeBox (как в host: 1-в-1) =====
-       ========================================================= */
+    /* volume stable */
     #volumeBox{
-      position: fixed;
-      top: 16px;
-      right: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      background: rgba(17, 26, 46, 0.92);
-      border-radius: 14px;
-      border: 1px solid #1f2a44;
-      z-index: 1000;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      position:fixed;top:16px;right:20px;display:flex;align-items:center;gap:10px;
+      padding:10px 14px;background:rgba(17,26,46,.95);border-radius:14px;border:1px solid #1f2a44;
+      z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
-
-    #volumeBox .vol-icon{ font-size: 20px; }
-
-    #volumeBox input[type="range"]{
-      width: 180px;
-      height: 6px;
-      cursor: pointer;
-    }
-
-    #volumeBox #volLabel{
-      min-width: 52px;
-      text-align: right;
-      font-weight: 700;
-      font-size: 16px;
-      opacity: .95;
-    }
-
-    /* фиксируем размер кнопки (не прыгает) */
+    #volumeBox .vol-icon{width:22px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;}
+    #volumeBox input[type="range"]{width:180px;height:6px;cursor:pointer;}
+    #volumeBox #volLabel{min-width:52px;text-align:right;font-weight:700;font-size:16px;opacity:.95;}
     #volumeBox button.mute-btn{
-      width: 56px;
-      height: 40px;
-      padding: 0;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 18px;
-      line-height: 1;
-
-      border-radius: 12px;
-      border: 1px solid #1f2a44;
-
-      cursor: pointer;
-      user-select: none;
-
-      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, background .15s ease;
+      width:56px;height:40px;padding:0;
+      display:inline-flex;align-items:center;justify-content:center;
+      border-radius:12px;font-size:18px;line-height:1;border:1px solid #1f2a44;
+      cursor:pointer;user-select:none;transition:transform .15s ease,filter .15s ease,box-shadow .15s ease;
     }
-
-    /* ON (звук включён) */
-    #volumeBox button.mute-btn.is-on{
-      background: linear-gradient(135deg, #8b5cf6, #6d28d9) !important;
-      color:#fff;
-      box-shadow: 0 10px 22px rgba(139, 92, 246, 0.35);
-    }
-
-    /* OFF (звук выключен) */
-    #volumeBox button.mute-btn.is-off{
-      background: #475569 !important;
-      color:#fff;
-      box-shadow: none;
-    }
-
-    /* hover glow (фиолетовый) */
-    #volumeBox button.mute-btn:hover{
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      animation: pulseVioletGlow 1.2s infinite;
-    }
-    #volumeBox button.mute-btn:active{ transform: translateY(0); }
-
-    /* даже если где-то случайно disabled — НЕ ломаем */
-    #volumeBox button.mute-btn:disabled{
-      opacity: 1 !important;
-      cursor: pointer !important;
-    }
-
-    @keyframes pulseVioletGlow{
-      0%   { box-shadow: 0 0 0 0 rgba(139,92,246,.55); }
-      70%  { box-shadow: 0 0 0 14px rgba(139,92,246,0); }
-      100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
-    }
+    #volumeBox button.mute-btn.is-on{background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 10px 22px rgba(139,92,246,.35);}
+    #volumeBox button.mute-btn.is-off{background:#475569;box-shadow:none;}
   </style>
 </head>
 
 <body>
   <canvas id="confetti"></canvas>
 
-  <!-- 🔊 Volume control -->
   <div id="volumeBox">
     <span class="vol-icon" id="volIcon">🔊</span>
     <input id="vol" type="range" min="0" max="100" value="80">
@@ -198,9 +94,8 @@
   </div>
 
   <div class="wrap">
-    <h1>Игрок</h1>
+    <div class="titleRow"><h1 id="playerTitle">Игрок</h1></div>
 
-    <!-- ВХОД -->
     <div class="card" id="joinCard">
       <div class="muted" style="margin-bottom:10px;">Введите имя и войдите в игру</div>
       <input id="name" type="text" placeholder="Ваше имя" maxlength="24" />
@@ -211,12 +106,12 @@
       </div>
     </div>
 
-    <!-- ИГРА -->
     <div id="gameScreen" class="hidden">
       <div class="card">
         <div class="row">
           <span class="badge" id="qBadge">Вопрос: —</span>
-          <span class="badge" id="timer">⏱ 0</span>
+          <div class="timeBar"><div id="timeBarFill" class="timeBarFill"></div></div>
+          <span id="roundPill" class="round-pill">—</span>
         </div>
         <h2 style="margin-top:10px;">Вопрос</h2>
         <div id="questionText">—</div>
@@ -234,14 +129,10 @@
 
       <div class="card">
         <h2>Таблица</h2>
-        <table>
-          <thead><tr><th>Игрок</th><th>Очки</th></tr></thead>
-          <tbody id="players"></tbody>
-        </table>
+        <table><thead><tr><th>Игрок</th><th>Очки</th></tr></thead><tbody id="players"></tbody></table>
       </div>
     </div>
 
-    <!-- 🏆 ЭКРАН ПОБЕДИТЕЛЯ -->
     <div id="winnerScreen" class="hidden">
       <div class="card">
         <div class="winner-hero">
@@ -260,10 +151,7 @@
 
       <div class="card">
         <h2>Полная таблица</h2>
-        <table>
-          <thead><tr><th>Место</th><th>Имя</th><th>Очки</th></tr></thead>
-          <tbody id="finalTable"></tbody>
-        </table>
+        <table><thead><tr><th>Место</th><th>Имя</th><th>Очки</th></tr></thead><tbody id="finalTable"></tbody></table>
       </div>
     </div>
   </div>
@@ -272,18 +160,17 @@
   <script>
     const socket = io();
 
-    // UI
     const joinCard = document.getElementById("joinCard");
     const joinBtn = document.getElementById("joinBtn");
     const nameEl = document.getElementById("name");
     const roomBadge = document.getElementById("roomBadge");
     const statusBadge = document.getElementById("statusBadge");
+    const playerTitle = document.getElementById("playerTitle");
 
     const gameScreen = document.getElementById("gameScreen");
     const winnerScreen = document.getElementById("winnerScreen");
 
     const qBadge = document.getElementById("qBadge");
-    const timerEl = document.getElementById("timer");
     const questionText = document.getElementById("questionText");
 
     const answerEl = document.getElementById("answer");
@@ -293,70 +180,77 @@
 
     const playersEl = document.getElementById("players");
 
+    const timeBarFill = document.getElementById("timeBarFill");
+    const roundPill = document.getElementById("roundPill");
+
     const podiumEl = document.getElementById("podium");
     const finalTableEl = document.getElementById("finalTable");
     const winnerNameEl = document.getElementById("winnerName");
     const winnerScoreEl = document.getElementById("winnerScore");
 
-    // URL code
     const params = new URLSearchParams(location.search);
     const roomCode = (params.get("code") || "").toUpperCase();
     roomBadge.textContent = roomCode ? `Комната: ${roomCode}` : "Комната: —";
 
-    // sounds
-    const winAudio = new Audio("/sounds/win.mp3");
-    winAudio.preload = "auto";
-    const drumAudio = new Audio("/sounds/drum.mp3");
-    drumAudio.preload = "auto";
+    let joined = false;
+    let answeredThisQuestion = false;
+    let finishHandledFor = null;
 
-    // ===== Volume logic (как в host: 1-в-1) =====
+    // sounds + volume
+    const winAudio = new Audio("/sounds/win.mp3");
+    const drumAudio = new Audio("/sounds/drum.mp3");
+    winAudio.preload = "auto"; drumAudio.preload = "auto";
+
+    let finishSeqToken = 0;
+    let finishFallbackTimer = null;
+    let drumEndedHandler = null;
+
+    function cancelFinishSequence(){
+      finishSeqToken++;
+      if (finishFallbackTimer){ clearTimeout(finishFallbackTimer); finishFallbackTimer = null; }
+      if (drumEndedHandler){
+        drumAudio.removeEventListener("ended", drumEndedHandler);
+        drumEndedHandler = null;
+      }
+    }
+
+    function stopSounds(){
+      cancelFinishSequence();
+      try { winAudio.pause(); winAudio.currentTime = 0; } catch(e){}
+      try { drumAudio.pause(); drumAudio.currentTime = 0; } catch(e){}
+    }
+
     const volEl = document.getElementById("vol");
     const volLabel = document.getElementById("volLabel");
     const muteBtn = document.getElementById("muteBtn");
     const volIcon = document.getElementById("volIcon");
-
     let muted = false;
 
-    function applyVolumeUI(){
-      const v = Number(volEl.value);     // 0..100
+    function applyVolume(){
+      const v = Number(volEl.value);
       volLabel.textContent = `${v}%`;
-
-      const vol01 = v / 100;             // 0..1
+      const vol01 = v / 100;
       winAudio.volume = vol01;
       drumAudio.volume = vol01;
-
       winAudio.muted = muted;
       drumAudio.muted = muted;
-
       const icon = muted ? "🔇" : "🔊";
       muteBtn.textContent = icon;
       volIcon.textContent = icon;
-
       muteBtn.classList.toggle("is-on", !muted);
       muteBtn.classList.toggle("is-off", muted);
-
-      muteBtn.disabled = false; // всегда активна
     }
+    applyVolume();
+    volEl.addEventListener("input", () => { muted = false; applyVolume(); });
+    muteBtn.addEventListener("click", () => { muted = !muted; applyVolume(); });
 
-    applyVolumeUI();
+    // audio warmup
+    document.addEventListener("click", () => {
+      drumAudio.play().then(()=>{drumAudio.pause();drumAudio.currentTime=0;}).catch(()=>{});
+      winAudio.play().then(()=>{winAudio.pause();winAudio.currentTime=0;}).catch(()=>{});
+    }, { once:true });
 
-    volEl.addEventListener("input", () => {
-      muted = false;
-      applyVolumeUI();
-    });
-
-    muteBtn.addEventListener("click", () => {
-      muted = !muted;
-      applyVolumeUI();
-    });
-
-    // чтобы финал не повторялся
-    let finishHandledFor = null;
-
-    let joined = false;
-    let answeredThisQuestion = false;
-
-    // 🎉 confetti
+    // confetti
     const confettiCanvas = document.getElementById("confetti");
     const ctx = confettiCanvas.getContext("2d");
 
@@ -372,9 +266,7 @@
     function startConfetti(durationMs = 3000){
       resizeConfetti();
       confettiCanvas.style.display = "block";
-
-      const W = window.innerWidth;
-      const H = window.innerHeight;
+      const W = window.innerWidth, H = window.innerHeight;
       const particles = [];
       const count = 180;
 
@@ -391,21 +283,14 @@
           life: 0
         });
       }
-
       const t0 = performance.now();
 
       function frame(t){
         const dt = (t - t0);
         ctx.clearRect(0,0,W,H);
-
         for (const p of particles){
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rot += p.vr;
-          p.vy += 0.02;
-          p.vx *= 0.995;
-          p.life += 1;
-
+          p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+          p.vy += 0.02; p.vx *= 0.995; p.life += 1;
           const sway = Math.sin(p.life*0.1) * 0.6;
 
           ctx.save();
@@ -416,28 +301,29 @@
           ctx.restore();
 
           if (p.y > H + 30){
-            p.y = -20;
-            p.x = Math.random()*W;
+            p.y = -20; p.x = Math.random()*W;
             p.vy = 3 + Math.random()*4.5;
           }
         }
-
-        if (dt < durationMs){
-          requestAnimationFrame(frame);
-        } else {
-          confettiCanvas.style.display = "none";
-          ctx.clearRect(0,0,W,H);
-        }
+        if (dt < durationMs) requestAnimationFrame(frame);
+        else { confettiCanvas.style.display="none"; ctx.clearRect(0,0,W,H); }
       }
-
       requestAnimationFrame(frame);
     }
 
-    // прогреваем аудио одним кликом (чтобы Chrome не блокировал)
-    document.addEventListener("click", () => {
-      drumAudio.play().then(() => { drumAudio.pause(); drumAudio.currentTime = 0; }).catch(()=>{});
-      winAudio.play().then(() => { winAudio.pause(); winAudio.currentTime = 0; }).catch(()=>{});
-    }, { once:true });
+    function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+    function updateTimeUI(timeLeft, duration){
+      const d = Math.max(1, Number(duration || 60));
+      const t = Math.max(0, Number(timeLeft || 0));
+      const ratio = clamp01(t / d);
+
+      timeBarFill.style.width = `${Math.round(ratio * 100)}%`;
+      if (ratio > 0.66) timeBarFill.style.backgroundColor = "#22c55e";
+      else if (ratio > 0.33) timeBarFill.style.backgroundColor = "#f59e0b";
+      else timeBarFill.style.backgroundColor = "#ef4444";
+
+      roundPill.textContent = `${t}с`;
+    }
 
     function showGame(){
       winnerScreen.classList.add("hidden");
@@ -446,36 +332,44 @@
     function showWinner(){
       gameScreen.classList.add("hidden");
       winnerScreen.classList.remove("hidden");
-
       winnerScreen.classList.remove("pop");
       void winnerScreen.offsetWidth;
       winnerScreen.classList.add("pop");
     }
 
-    function setJoinedUI(){
+    function setPlayerTitle(name){
+      const safe = (name || "").trim() || "Игрок";
+      playerTitle.textContent = `Игрок: ${safe}`;
+    }
+
+    function setAnswerEnabled(on){
+      answerEl.disabled = !on;
+      clearBtn.disabled = !on;
+      sendBtn.disabled = !on || answeredThisQuestion;
+    }
+
+    joinBtn.onclick = () => {
+      stopSounds();
+
+      const name = (nameEl.value || "").trim();
+      if (!roomCode) return alert("Нет кода комнаты в ссылке!");
+      socket.emit("player:join", { code: roomCode, name });
+
+      setPlayerTitle(name);
+
       joinBtn.disabled = true;
       joinBtn.textContent = "Вы в игре ✅";
-      joinBtn.style.background = "#475569";
       statusBadge.textContent = "Вы в игре ✅";
       joined = true;
 
       joinCard.classList.add("hidden");
       showGame();
-    }
-
-    joinBtn.onclick = () => {
-      const name = (nameEl.value || "").trim();
-      if (!roomCode) return alert("Нет кода комнаты в ссылке!");
-      socket.emit("player:join", { code: roomCode, name });
-      setJoinedUI();
     };
 
     clearBtn.onclick = () => { answerEl.value = ""; };
 
     sendBtn.onclick = () => {
-      if (!joined) return;
-      if (answeredThisQuestion) return;
-
+      if (!joined || answeredThisQuestion) return;
       const text = (answerEl.value || "").trim();
       if (!text) return;
 
@@ -485,20 +379,19 @@
       sendHint.textContent = "Ответ отправлен ✅";
     };
 
-    answerEl.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") sendBtn.click();
-    });
+    answerEl.addEventListener("keydown", (e) => { if (e.key === "Enter") sendBtn.click(); });
 
     socket.on("error:msg", (msg) => alert(msg));
 
-    function runFinishSequence(state) {
-      if (finishHandledFor === roomCode) {
-        showWinner();
-        return;
-      }
+    function runFinishSequence(state){
+      if (finishHandledFor === roomCode) { showWinner(); return; }
       finishHandledFor = roomCode;
 
+      const token = ++finishSeqToken;
+
       const afterDrum = () => {
+        if (token !== finishSeqToken) return;
+
         const players = state.players || [];
         const top = players[0];
 
@@ -512,7 +405,6 @@
           const p = top3[i];
           const name = p ? p.name : "—";
           const score = p ? p.score : 0;
-
           const div = document.createElement("div");
           div.className = "p";
           div.innerHTML = `
@@ -531,21 +423,27 @@
         });
 
         showWinner();
-
         try { winAudio.currentTime = 0; winAudio.play().catch(()=>{}); } catch(e){}
         startConfetti(3000);
       };
 
-      const onEnd = () => afterDrum();
-      drumAudio.addEventListener("ended", onEnd, { once: true });
+      drumEndedHandler = () => {
+        drumEndedHandler = null;
+        afterDrum();
+      };
+      drumAudio.addEventListener("ended", drumEndedHandler, { once:true });
 
       const durMs =
         Number.isFinite(drumAudio.duration) && drumAudio.duration > 0
           ? Math.ceil(drumAudio.duration * 1000)
           : 1400;
 
-      const fallbackTimer = setTimeout(() => {
-        drumAudio.removeEventListener("ended", onEnd);
+      finishFallbackTimer = setTimeout(() => {
+        finishFallbackTimer = null;
+        if (drumEndedHandler){
+          drumAudio.removeEventListener("ended", drumEndedHandler);
+          drumEndedHandler = null;
+        }
         afterDrum();
       }, durMs + 200);
 
@@ -554,22 +452,29 @@
         const p = drumAudio.play();
         if (p && typeof p.then === "function") {
           p.catch(() => {
-            clearTimeout(fallbackTimer);
-            drumAudio.removeEventListener("ended", onEnd);
+            if (finishFallbackTimer) clearTimeout(finishFallbackTimer);
+            finishFallbackTimer = null;
+            if (drumEndedHandler){
+              drumAudio.removeEventListener("ended", drumEndedHandler);
+              drumEndedHandler = null;
+            }
             afterDrum();
           });
         }
       } catch (e) {
-        clearTimeout(fallbackTimer);
-        drumAudio.removeEventListener("ended", onEnd);
+        if (finishFallbackTimer) clearTimeout(finishFallbackTimer);
+        finishFallbackTimer = null;
+        if (drumEndedHandler){
+          drumAudio.removeEventListener("ended", drumEndedHandler);
+          drumEndedHandler = null;
+        }
         afterDrum();
       }
     }
 
     socket.on("room:update", (state) => {
       if (!state) return;
-
-      timerEl.textContent = `⏱ ${state.timeLeft ?? 0}`;
+      if (state.code && roomCode && state.code !== roomCode) return;
 
       playersEl.innerHTML = "";
       (state.players || []).forEach(p => {
@@ -578,28 +483,35 @@
         playersEl.appendChild(tr);
       });
 
-      if (state.phase === "lobby") {
-        finishHandledFor = null;
-        showGame();
+      const dur = state.questionDuration ?? 60;
 
+      if (state.phase === "lobby") {
+        stopSounds();
+        finishHandledFor = null;
+
+        showGame();
         qBadge.textContent = "Вопрос: —";
         questionText.textContent = "Ожидание начала опроса…";
 
         answeredThisQuestion = false;
-        sendBtn.disabled = false;
-        sendHint.textContent = "—";
+        sendHint.textContent = "Ждите начала вопроса…";
+        setAnswerEnabled(false);
+
+        updateTimeUI(0, dur);
+        roundPill.textContent = `${dur}с`;
         return;
       }
 
       if (state.phase === "question") {
         showGame();
-
         qBadge.textContent = `Вопрос ${state.questionNumber}/${state.totalQuestions}`;
         questionText.textContent = state.question || "—";
 
         answeredThisQuestion = false;
-        sendBtn.disabled = false;
         sendHint.textContent = "Пишите ответ и нажимайте Отправить";
+        setAnswerEnabled(true);
+
+        updateTimeUI(state.timeLeft ?? 0, dur);
         return;
       }
 
@@ -607,21 +519,29 @@
         showGame();
         qBadge.textContent = `Результаты (${state.questionNumber}/${state.totalQuestions})`;
         questionText.textContent = "Результаты у ведущего. Ждите следующий вопрос…";
+
+        sendHint.textContent = "Ждите следующий вопрос…";
+        setAnswerEnabled(false);
+        answerEl.value = "";
+
+        updateTimeUI(0, dur);
+        roundPill.textContent = `${dur}с`;
         return;
       }
 
       if (state.phase === "finished") {
+        setAnswerEnabled(false);
         runFinishSequence(state);
-        return;
       }
     });
-
-    nameEl.value = "";
 
     if (!roomCode) {
       statusBadge.textContent = "Нет кода комнаты";
       joinBtn.disabled = true;
       joinBtn.textContent = "Нужна ссылка ведущего";
+    } else {
+      // до входа — нельзя отправлять
+      setAnswerEnabled(false);
     }
   </script>
 </body>
