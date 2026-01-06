@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <link rel="stylesheet" href="/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>100 к 1 — Ведущий</title>
+
+  <style>
+    /* ===== Background (ярче) ===== */
+    body{
+      margin:0;
+      font-family:system-ui, Arial, sans-serif;
+      color:#fff;
+      background:
+        radial-gradient(1200px 800px at 10% 10%, rgba(59,130,246,1), transparent 60%),
+        radial-gradient(1000px 900px at 90% 35%, rgba(168,85,247,1), transparent 65%),
+        radial-gradient(900px 900px at 50% 90%, rgba(217,70,239,0.95), transparent 70%),
+        linear-gradient(180deg, #0b102a, #0b102a);
+      min-height:100vh;
+    }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+    h1,h2 { margin-top: 0; }
+    h1{ text-align:center; margin-bottom: 14px; }
+
+    .card {
+      background: rgba(17,26,46,.92);
+      border-radius:14px;
+      padding:16px;
+      margin-bottom:16px;
+      border:1px solid #1f2a44;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .muted { opacity:.82; }
+    .badge { display:inline-block; padding:4px 10px; border:1px solid #1f2a44; border-radius:999px; }
+
+    table { width:100%; border-collapse:collapse; }
+    th,td { padding:8px; border-bottom:1px solid #1f2a44; text-align:left; }
+
+    .copy-link { cursor:pointer; user-select:none; font-size:18px; transition:transform .1s, opacity .1s; }
+    .copy-link:hover { transform:scale(1.15); opacity:.85; }
+
+    .hidden { display:none; }
+
+    /* ===== Buttons ===== */
+    button{
+      padding:10px 14px;
+      border-radius:12px;
+      border:none;
+      color:#fff;
+      font-size:16px;
+      cursor:pointer;
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, opacity .15s ease;
+      user-select:none;
+      line-height: 1;
+    }
+
+    button.primary{
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      box-shadow: 0 10px 22px rgba(139,92,246,.28);
+    }
+    button.primary:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      animation: pulseViolet 1.2s infinite;
+    }
+    button.primary:active{ transform: translateY(0); }
+
+    button.secondary { background:#475569; box-shadow:none; }
+    button.secondary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    button.secondary:active{ transform: translateY(0); }
+
+    button.success{
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 10px 22px rgba(34,197,94,.25);
+    }
+    button.success:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      animation: pulseGreen 1.2s infinite;
+    }
+    button.success:active{ transform: translateY(0); }
+
+    button:disabled {
+      opacity:.55;
+      cursor:not-allowed;
+      animation:none !important;
+      transform:none !important;
+      filter:none !important;
+    }
+
+    @keyframes pulseViolet{
+      0%   { box-shadow: 0 0 0 0 rgba(139,92,246,.55); }
+      70%  { box-shadow: 0 0 0 14px rgba(139,92,246,0); }
+      100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
+    }
+    @keyframes pulseGreen{
+      0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.55); }
+      70%  { box-shadow: 0 0 0 14px rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+
+    /* ===== Winner Animation ===== */
+    .podium { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .podium .p { flex:1; min-width:220px; border:1px solid #1f2a44; border-radius:12px; padding:12px; }
+    .big { font-size:22px; font-weight:700; }
+
+    .winner-hero{ text-align:center; padding:18px 12px; }
+    .cup{
+      font-size:76px; line-height:1; display:inline-block;
+      filter: drop-shadow(0 12px 28px rgba(0,0,0,.55));
+      transform: translateY(10px) scale(.9);
+      opacity:0;
+    }
+    .winner-title{ margin:10px 0 0; font-size:30px; font-weight:800; opacity:0; transform: translateY(8px); }
+    .winner-name{ margin:6px 0 0; font-size:22px; opacity:0; transform: translateY(8px); }
+    .winner-score{ margin:8px 0 0; font-size:18px; opacity:0; transform: translateY(8px); }
+
+    #winnerScreen.pop .cup{ animation: popIn .7s cubic-bezier(.2,.9,.2,1) forwards; }
+    #winnerScreen.pop .winner-title{ animation: slideUp .6s .12s cubic-bezier(.2,.9,.2,1) forwards; }
+    #winnerScreen.pop .winner-name{ animation: slideUp .6s .22s cubic-bezier(.2,.9,.2,1) forwards; }
+    #winnerScreen.pop .winner-score{ animation: slideUp .6s .32s cubic-bezier(.2,.9,.2,1) forwards; }
+    #winnerScreen.pop .podium .p{ animation: rise .5s .25s ease-out both; }
+    #winnerScreen.pop .podium .p:nth-child(2){ animation-delay:.33s; }
+    #winnerScreen.pop .podium .p:nth-child(3){ animation-delay:.41s; }
+
+    @keyframes popIn{ to{ opacity:1; transform: translateY(0) scale(1); } }
+    @keyframes slideUp{ to{ opacity:1; transform: translateY(0); } }
+    @keyframes rise{ from{ opacity:0; transform: translateY(10px); } to{ opacity:1; transform: translateY(0); } }
+
+    /* ===== Confetti canvas ===== */
+    #confetti{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+      display:none;
+    }
+
+    /* ===== Volume control top-right ===== */
+    #volumeBox{
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 14px;
+      background: rgba(17, 26, 46, 0.95);
+      border-radius: 14px;
+      border: 1px solid #1f2a44;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    #volumeBox .vol-icon{ font-size:20px; }
+    #volumeBox input[type="range"]{ width: 180px; height: 6px; cursor:pointer; }
+    #volumeBox #volLabel{ min-width: 52px; text-align:right; font-weight:700; font-size:16px; opacity:.95; }
+
+    #volumeBox button.mute-btn{
+      border-radius:12px;
+      padding:10px 14px;
+      font-size:18px;
+      line-height:1;
+      border:1px solid #1f2a44;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+    }
+    #volumeBox button.mute-btn.is-on{
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color:#fff;
+      box-shadow: 0 10px 22px rgba(139, 92, 246, 0.35);
+    }
+    #volumeBox button.mute-btn.is-off{
+      background:#475569;
+      color:#fff;
+      box-shadow:none;
+    }
+    #volumeBox button.mute-btn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      animation: pulseViolet 1.2s infinite;
+    }
+    #volumeBox button.mute-btn:active{ transform: translateY(0); }
+
+    /* ===== Presets + progress bar ===== */
+    .presetRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .presetBtn{
+      padding:7px 12px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:14px;
+      border:1px solid #1f2a44;
+    }
+    .presetBtn.is-active{
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      box-shadow: 0 10px 22px rgba(139,92,246,.22);
+    }
+
+    /* ВАЖНО: когда пресеты заблокированы — НЕ тускнеем */
+    .presetRow.is-locked { opacity: 1; filter: none; }
+    .presetRow.is-locked .presetBtn{ cursor:not-allowed; }
+
+    .timeBar{
+      width: 280px;
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    .timeBarFill{
+      height:100%;
+      width:100%;
+      border-radius:999px;
+      transition: width .35s linear, background-color .25s ease;
+    }
+
+    /* Плашка "27с" рядом с прогресс-баром (как на твоём скрине) */
+    .round-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px 12px;
+      border-radius:999px;
+      border:1px solid #1f2a44;
+      background: rgba(17, 26, 46, 0.65);
+      font-weight:900;
+      min-width: 54px;
+      letter-spacing: .2px;
+    }
+    /* ===== Bigger question card ===== */
+#qInfo{
+  font-size: 22px;        /* размер текста вопроса */
+  line-height: 1.35;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+#gameScreen .card:first-of-type{
+  padding: 26px 22px;     /* больше “воздуха” */
+  border-radius: 18px;
+}
+
+#gameScreen .card:first-of-type h2{
+  font-size: 30px;        /* заголовок “Вопрос” */
+  margin: 0;
+  letter-spacing: .2px;
+}
+
+  </style>
+</head>
+
+<body>
+  <canvas id="confetti"></canvas>
+
+  <!-- 🔊 Volume control -->
+  <div id="volumeBox">
+    <span class="vol-icon">🔊</span>
+    <input id="vol" type="range" min="0" max="100" value="80">
+    <span id="volLabel">80%</span>
+    <button id="muteBtn" class="mute-btn" type="button" aria-label="Mute">🔊</button>
+  </div>
+
+  <div class="wrap">
+    <h1>Ведущий</h1>
+
+    <!-- Панель управления -->
+    <div class="card" id="controlCard">
+      <div class="row">
+        <button id="createRoom" class="primary">Создать комнату</button>
+        <button id="nextBtn" class="primary" disabled>Начать опрос</button>
+        <button id="resultsBtn" class="secondary" disabled>Показать результаты</button>
+        <span class="badge" id="countInfo">0/0 ответили</span>
+        <!-- ❌ старый таймер УБРАН (как ты просил) -->
+      </div>
+
+      <div class="presetRow" id="presetRow">
+        <span class="muted" style="font-weight:800;">⏱ Время:</span>
+        <button id="preset30" class="presetBtn secondary" type="button">30с</button>
+        <button id="preset60" class="presetBtn secondary" type="button">60с</button>
+        <button id="preset90" class="presetBtn secondary" type="button">90с</button>
+
+        <div class="timeBar" title="Прогресс времени">
+          <div id="timeBarFill" class="timeBarFill"></div>
+        </div>
+
+        <span id="roundPill" class="round-pill">60с</span>
+      </div>
+
+      <div id="roomInfo" class="muted" style="margin-top:10px">—</div>
+    </div>
+
+    <!-- ИГРА -->
+    <div id="gameScreen">
+      <div class="card">
+        <h2>Вопрос</h2>
+        <div id="qInfo">—</div>
+      </div>
+
+      <div class="card">
+        <h2>Эталон (5 правильных ответов)</h2>
+        <table>
+          <thead><tr><th>Баллы</th><th>Ответ</th></tr></thead>
+          <tbody id="key"></tbody>
+        </table>
+        <div class="muted" id="keyHint" style="margin-top:8px">Эталон появится, когда начнется вопрос.</div>
+      </div>
+
+      <div class="card">
+        <h2>Результаты вопроса</h2>
+        <table>
+          <thead><tr><th>Игрок</th><th>Ответ</th><th>Баллы</th></tr></thead>
+          <tbody id="subs"></tbody>
+        </table>
+        <div class="muted" id="subsHint" style="margin-top:8px">Результаты появятся после «Показать результаты» или когда выйдет время.</div>
+      </div>
+
+      <div class="card">
+        <h2>Общий счёт</h2>
+        <table>
+          <thead><tr><th>Имя</th><th>Очки</th></tr></thead>
+          <tbody id="players"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 🏆 ЭКРАН ПОБЕДИТЕЛЯ -->
+    <div id="winnerScreen" class="hidden">
+      <div class="card">
+        <div class="winner-hero">
+          <div class="cup">🏆</div>
+          <div class="winner-title">Победитель</div>
+          <div class="winner-name" id="winnerName">—</div>
+          <div class="winner-score" id="winnerScore">Очки: 0</div>
+        </div>
+
+        <div class="podium" id="podium"></div>
+
+        <div class="row" style="margin-top:12px;">
+          <button id="newGameBtn" class="success">🔄 Новая игра</button>
+        </div>
+
+        <div class="muted" style="margin-top:10px;">
+          Новая игра сбросит очки и вернёт к началу. Игроки останутся подключены.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Полная таблица</h2>
+        <table>
+          <thead><tr><th>Место</th><th>Имя</th><th>Очки</th></tr></thead>
+          <tbody id="finalTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const roomInfo = document.getElementById("roomInfo");
+    const qInfo = document.getElementById("qInfo");
+    const playersEl = document.getElementById("players");
+    const subsEl = document.getElementById("subs");
+    const subsHint = document.getElementById("subsHint");
+    const nextBtn = document.getElementById("nextBtn");
+    const resultsBtn = document.getElementById("resultsBtn");
+    const countInfo = document.getElementById("countInfo");
+
+    const keyEl = document.getElementById("key");
+    const keyHint = document.getElementById("keyHint");
+
+    const gameScreen = document.getElementById("gameScreen");
+    const winnerScreen = document.getElementById("winnerScreen");
+    const podiumEl = document.getElementById("podium");
+    const finalTableEl = document.getElementById("finalTable");
+    const newGameBtn = document.getElementById("newGameBtn");
+
+    const winnerNameEl = document.getElementById("winnerName");
+    const winnerScoreEl = document.getElementById("winnerScore");
+
+    // ===== Sounds =====
+    const winAudio = new Audio("/sounds/win.mp3");
+    winAudio.preload = "auto";
+    let winPlayedFor = null;
+
+    const drumAudio = new Audio("/sounds/drum.mp3");
+    drumAudio.preload = "auto";
+
+    // ===== Volume (как у игрока) =====
+    const volEl = document.getElementById("vol");
+    const volLabel = document.getElementById("volLabel");
+    const muteBtn = document.getElementById("muteBtn");
+    let muted = false;
+
+    function applyVolume(){
+      const v = Number(volEl.value);     // 0..100
+      volLabel.textContent = `${v}%`;
+      const vol01 = v / 100;
+
+      winAudio.volume = vol01;
+      drumAudio.volume = vol01;
+
+      winAudio.muted = muted;
+      drumAudio.muted = muted;
+
+      muteBtn.textContent = muted ? "🔇" : "🔊";
+      muteBtn.classList.toggle("is-on", !muted);
+      muteBtn.classList.toggle("is-off", muted);
+    }
+    applyVolume();
+
+    volEl.addEventListener("input", () => {
+      muted = false;
+      applyVolume();
+    });
+    muteBtn.addEventListener("click", () => {
+      muted = !muted;
+      applyVolume();
+    });
+
+    // прогрев (чтобы Chrome не блокировал)
+    document.addEventListener("click", () => {
+      drumAudio.play().then(() => { drumAudio.pause(); drumAudio.currentTime = 0; }).catch(()=>{});
+      winAudio.play().then(() => { winAudio.pause(); winAudio.currentTime = 0; }).catch(()=>{});
+    }, { once:true });
+
+    // ===== Room =====
+    let roomCode = null;
+    let started = false;
+    let finishHandledFor = null;
+
+    // ===== Presets + progress bar =====
+    const presetRow = document.getElementById("presetRow");
+    const preset30 = document.getElementById("preset30");
+    const preset60 = document.getElementById("preset60");
+    const preset90 = document.getElementById("preset90");
+    const timeBarFill = document.getElementById("timeBarFill");
+    const roundPill = document.getElementById("roundPill");
+
+    let selectedSeconds = 60;      // что выбрали ДО старта
+    let fixedSeconds = 60;         // что реально используется после старта (фиксируется)
+    let presetLocked = false;      // блок после старта
+    let hasEverStarted = false;    // чтобы понимать, что уже стартовали
+
+    function setPresetUI(sec){
+      selectedSeconds = sec;
+
+      preset30.classList.toggle("is-active", sec === 30);
+      preset60.classList.toggle("is-active", sec === 60);
+      preset90.classList.toggle("is-active", sec === 90);
+
+      // базовый вид кнопок
+      preset30.classList.toggle("secondary", sec !== 30);
+      preset60.classList.toggle("secondary", sec !== 60);
+      preset90.classList.toggle("secondary", sec !== 90);
+
+      preset30.classList.toggle("primary", sec === 30);
+      preset60.classList.toggle("primary", sec === 60);
+      preset90.classList.toggle("primary", sec === 90);
+
+      // плашка рядом с прогрессом (когда не идёт вопрос — показывает выбранное)
+      if (!hasEverStarted) roundPill.textContent = `${sec}с`;
+    }
+
+    function lockPresets(isLocked){
+      presetLocked = isLocked;
+      presetRow.classList.toggle("is-locked", isLocked);
+      preset30.disabled = isLocked;
+      preset60.disabled = isLocked;
+      preset90.disabled = isLocked;
+    }
+
+    function emitPresetToServer(){
+      if (!roomCode) return;
+      // сервер должен принять host:set_time (если добавлял)
+      socket.emit("host:set_time", { code: roomCode, seconds: selectedSeconds });
+    }
+
+    preset30.onclick = () => { if (presetLocked) return; setPresetUI(30); emitPresetToServer(); };
+    preset60.onclick = () => { if (presetLocked) return; setPresetUI(60); emitPresetToServer(); };
+    preset90.onclick = () => { if (presetLocked) return; setPresetUI(90); emitPresetToServer(); };
+
+    function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+    function updateTimeBar(timeLeft){
+      const maxT = Math.max(1, fixedSeconds || selectedSeconds || 60);
+      const ratio = clamp01((timeLeft ?? 0) / maxT);
+      timeBarFill.style.width = `${Math.round(ratio * 100)}%`;
+
+      // цвет: зелёный -> жёлтый -> красный
+      if (ratio > 0.66) timeBarFill.style.backgroundColor = "#22c55e";
+      else if (ratio > 0.33) timeBarFill.style.backgroundColor = "#f59e0b";
+      else timeBarFill.style.backgroundColor = "#ef4444";
+    }
+
+    // стартовые UI
+    setPresetUI(60);
+    lockPresets(false);
+    fixedSeconds = selectedSeconds;
+    updateTimeBar(0);
+
+    // ===== Buttons =====
+    document.getElementById("createRoom").onclick = () => socket.emit("host:create");
+    nextBtn.onclick = () => socket.emit("host:next", { code: roomCode });
+    resultsBtn.onclick = () => socket.emit("host:show_results", { code: roomCode });
+    newGameBtn.onclick = () => socket.emit("host:reset", { code: roomCode });
+
+    // ===== Winner screen =====
+    function showWinnerScreen(state) {
+      gameScreen.classList.add("hidden");
+      winnerScreen.classList.remove("hidden");
+
+      winnerScreen.classList.remove("pop");
+      void winnerScreen.offsetWidth;
+      winnerScreen.classList.add("pop");
+
+      const players = state.players || [];
+      const top3 = players.slice(0, 3);
+      const top = players[0];
+
+      winnerNameEl.textContent = top ? `🥇 ${top.name}` : "—";
+      winnerScoreEl.textContent = `Очки: ${top ? top.score : 0}`;
+
+      const medals = ["🥇", "🥈", "🥉"];
+      podiumEl.innerHTML = "";
+      for (let i = 0; i < 3; i++) {
+        const p = top3[i];
+        const name = p ? p.name : "—";
+        const score = p ? p.score : 0;
+
+        const div = document.createElement("div");
+        div.className = "p";
+        div.innerHTML = `
+          <div class="big">${medals[i]} ${i+1} место</div>
+          <div style="margin-top:6px;">Игрок: <b>${name}</b></div>
+          <div style="margin-top:4px;">Очки: <b>${score}</b></div>
+        `;
+        podiumEl.appendChild(div);
+      }
+
+      finalTableEl.innerHTML = "";
+      players.forEach((p, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${idx+1}</td><td>${p.name}</td><td>${p.score}</td>`;
+        finalTableEl.appendChild(tr);
+      });
+
+      nextBtn.disabled = true;
+      nextBtn.textContent = "Вопросы закончились";
+      resultsBtn.disabled = true;
+
+      updateTimeBar(0);
+      roundPill.textContent = `${fixedSeconds}с`;
+    }
+
+    function showGameScreen() {
+      winnerScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+    }
+
+    // ===== Finish sequence (drum -> winner -> win sound) =====
+    function runFinishSequence(state) {
+      if (finishHandledFor === roomCode) {
+        showWinnerScreen(state);
+        return;
+      }
+      finishHandledFor = roomCode;
+
+      const afterDrum = () => {
+        showWinnerScreen(state);
+
+        if (winPlayedFor !== roomCode) {
+          winPlayedFor = roomCode;
+          try { winAudio.currentTime = 0; winAudio.play().catch(() => {}); } catch (e) {}
+        }
+      };
+
+      const onEnd = () => afterDrum();
+      drumAudio.addEventListener("ended", onEnd, { once: true });
+
+      const durMs =
+        Number.isFinite(drumAudio.duration) && drumAudio.duration > 0
+          ? Math.ceil(drumAudio.duration * 1000)
+          : 1400;
+
+      const fallbackTimer = setTimeout(() => {
+        drumAudio.removeEventListener("ended", onEnd);
+        afterDrum();
+      }, durMs + 200);
+
+      try {
+        drumAudio.currentTime = 0;
+        const p = drumAudio.play();
+        if (p && typeof p.then === "function") {
+          p.catch(() => {
+            clearTimeout(fallbackTimer);
+            drumAudio.removeEventListener("ended", onEnd);
+            afterDrum();
+          });
+        }
+      } catch (e) {
+        clearTimeout(fallbackTimer);
+        drumAudio.removeEventListener("ended", onEnd);
+        afterDrum();
+      }
+    }
+
+    // ===== Socket events =====
+    socket.on("host:created", ({ code }) => {
+      roomCode = code;
+      const link = `${location.origin}/player.html?code=${code}`;
+
+      roomInfo.innerHTML = `
+        <div>Комната: <b>${code}</b></div>
+        <div style="margin-top:6px; display:flex; align-items:center; gap:6px;">
+          <span>Ссылка игрокам:</span>
+          <span style="word-break:break-all;">${link}</span>
+          <span class="copy-link" id="copyLink" title="Скопировать ссылку">🔗</span>
+          <span id="copyStatus" class="muted"></span>
+        </div>
+      `;
+
+      document.getElementById("copyLink").onclick = () => {
+        navigator.clipboard.writeText(link).then(() => {
+          const s = document.getElementById("copyStatus");
+          s.textContent = "Скопировано!";
+          setTimeout(() => s.textContent = "", 1500);
+        });
+      };
+
+      nextBtn.disabled = false;
+      nextBtn.textContent = "Начать опрос";
+      started = false;
+      finishHandledFor = null;
+
+      // до старта вопроса можно выбрать время
+      hasEverStarted = false;
+      lockPresets(false);
+
+      fixedSeconds = selectedSeconds;
+      roundPill.textContent = `${selectedSeconds}с`;
+      updateTimeBar(0);
+
+      emitPresetToServer(); // отправим выбранное (если сервер умеет)
+      showGameScreen();
+      qInfo.textContent = "—";
+    });
+
+    socket.on("room:update", (state) => {
+      if (!state) return;
+
+      countInfo.textContent = `${state.answeredCount}/${state.playerCount} ответили`;
+
+      // как только начался первый вопрос — фиксируем и блокируем пресеты
+      if (state.phase === "question" && !hasEverStarted) {
+        hasEverStarted = true;
+        fixedSeconds = selectedSeconds;
+        lockPresets(true);
+      }
+
+      // прогресс + плашка рядом (показываем ОСТАВШЕЕСЯ время в секундах)
+      const left = Number(state.timeLeft ?? 0);
+      updateTimeBar(left);
+
+      if (state.phase === "question") {
+        roundPill.textContent = `${left}s`.replace("s", "с");
+      } else {
+        // когда не идёт вопрос — показываем выбранный/зафиксированный пресет
+        roundPill.textContent = `${(hasEverStarted ? fixedSeconds : selectedSeconds)}с`;
+      }
+
+      // lobby (после "Новая игра")
+      if (state.phase === "lobby") {
+        finishHandledFor = null;
+        showGameScreen();
+        started = false;
+
+        nextBtn.disabled = !roomCode;
+        nextBtn.textContent = "Начать опрос";
+        resultsBtn.disabled = true;
+
+        qInfo.textContent = "Ожидание начала опроса…";
+        subsEl.innerHTML = "";
+        subsHint.textContent = "Пока нет результатов.";
+
+        // ✅ по твоей логике: после Новой игры снова можно выбрать время
+        hasEverStarted = false;
+        lockPresets(false);
+        fixedSeconds = selectedSeconds;
+        roundPill.textContent = `${selectedSeconds}с`;
+        updateTimeBar(0);
+        return;
+      }
+
+      // подпись кнопки после старта
+      if (state.phase === "question" && !started) {
+        started = true;
+        nextBtn.textContent = "Следующий вопрос";
+      }
+
+      // finished
+      if (state.phase === "finished") {
+        qInfo.textContent = "Игра окончена";
+        runFinishSequence(state);
+        return;
+      } else {
+        showGameScreen();
+        qInfo.textContent = `Вопрос ${state.questionNumber}/${state.totalQuestions}: ${state.question}`;
+      }
+
+      resultsBtn.disabled = !(roomCode && state.phase === "question");
+
+      // общий счёт
+      playersEl.innerHTML = "";
+      (state.players || []).forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${p.name}</td><td>${p.score}</td>`;
+        playersEl.appendChild(tr);
+      });
+
+      // результаты вопроса
+      subsEl.innerHTML = "";
+      if (state.phase === "results") {
+        subsHint.textContent = "";
+        (state.submissions || []).forEach(s => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${s.name}</td><td>${s.text || "—"}</td><td>${s.points}</td>`;
+          subsEl.appendChild(tr);
+        });
+      } else {
+        subsHint.textContent = "Результаты появятся после «Показать результаты» или когда выйдет время.";
+      }
+    });
+
+    socket.on("host:update", (state) => {
+      keyEl.innerHTML = "";
+      if (state && state.key && state.key.length) {
+        keyHint.textContent = "";
+        state.key.forEach(item => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${item.points}</td><td>${item.text}</td>`;
+          keyEl.appendChild(tr);
+        });
+      } else {
+        keyHint.textContent = "Эталон появится, когда начнется вопрос.";
+      }
+    });
+  </script>
+</body>
+</html>

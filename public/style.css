@@ -1,0 +1,95 @@
+/* ===== Base ===== */
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  color: #fff;
+
+  background:
+    radial-gradient(1200px 800px at 10% 10%, rgba(59,130,246,1), transparent 60%),
+    radial-gradient(1000px 900px at 90% 35%, rgba(168,85,247,1), transparent 65%),
+    radial-gradient(900px 900px at 50% 90%, rgba(217,70,239,0.95), transparent 70%),
+    linear-gradient(180deg, #0b102a, #0b102a);
+
+  min-height: 100vh;
+}
+
+.wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+h1,h2 { margin-top: 0; }
+
+.card { background:#111a2e; border-radius:14px; padding:16px; margin-bottom:16px; }
+.row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+button {
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  animation: pulseViolet 1.2s infinite;
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+@keyframes pulseViolet {
+  0%   { box-shadow: 0 0 0 0 rgba(139, 92, 246, .55); }
+  70%  { box-shadow: 0 0 0 14px rgba(139, 92, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+}
+
+button.secondary { background:#475569; }
+button.danger { background:#ef4444; }
+
+button.success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35);
+}
+
+button.success:hover { animation: pulseGlow 1.2s infinite; }
+
+@keyframes pulseGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+button:disabled { opacity:.4; cursor:not-allowed; }
+
+table { width:100%; border-collapse:collapse; }
+th,td { padding:8px; border-bottom:1px solid #1f2a44; text-align:left; }
+.muted { opacity:.8; }
+.badge { display:inline-block; padding:4px 10px; border:1px solid #1f2a44; border-radius:999px; }
+
+.copy-link { cursor:pointer; user-select:none; font-size:18px; transition:transform .1s, opacity .1s; }
+.copy-link:hover { transform:scale(1.15); opacity:.85; }
+
+.hidden { display:none; }
+
+/* ===== Volume control ===== */
+#volumeBox{
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(17, 26, 46, 0.95);
+  border-radius: 14px;
+  border: 1px solid #1f2a44;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+#volumeBox .vol-icon{ font-size: 20px; }
+#volumeBox input[type="range"]{ width: 180px; height: 6px; cursor: pointer; }
+#volumeBox #volLabel{ min-width: 44px; text-align: right; font-weight: 600; font-size: 15px; }
+#volumeBox button{ font-size: 15px; padding: 8px 12px; border-radius: 10px; }
