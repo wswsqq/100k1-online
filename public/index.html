@@ -1,140 +1,117 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <link rel="stylesheet" href="/style.css">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>100 к 1 — Главный экран</title>
-
+  <title>100 к 1 — Главная</title>
   <style>
-    /* Центрируем заголовок */
-    .title-center{
-      text-align:center;
-      margin-bottom: 14px;
+    body{
+      margin:0;font-family:system-ui,Arial,sans-serif;color:#fff;
+      background:
+        radial-gradient(1200px 800px at 10% 10%, rgba(59,130,246,1), transparent 60%),
+        radial-gradient(1000px 900px at 90% 35%, rgba(168,85,247,1), transparent 65%),
+        radial-gradient(900px 900px at 50% 90%, rgba(217,70,239,0.95), transparent 70%),
+        linear-gradient(180deg,#0b102a,#0b102a);
+      min-height:100vh;
+      display:flex;align-items:center;justify-content:center;
     }
-    .title-center h1{
-      margin: 0 0 8px;
-      font-size: 44px;
-      font-weight: 900;
-      letter-spacing: .5px;
-    }
-    .title-center p{
-      margin: 0;
-      font-size: 18px;
-      opacity: .9;
-    }
-
-    /* Поле кода комнаты — больше и круглее */
-    #code.room-input{
-      width: 260px;
-      padding: 14px 16px;
-      font-size: 18px;
-      border-radius: 16px;
-      border: 1px solid #1f2a44;
-      background: rgba(11, 19, 40, .9);
-      color: #fff;
-      outline: none;
-      box-sizing: border-box;
-    }
-    #code.room-input::placeholder{ opacity: .7; }
-
-    /* Блок "Как играть" — крупнее и понятнее */
-    .howto h2{
-      font-size: 28px;
-      margin: 0 0 12px;
-    }
-    .howto-lead{
-      font-size: 18px;
-      line-height: 1.55;
-      opacity: .95;
-      margin: 0 0 14px;
-    }
-    .howto-steps{
-      font-size: 18px;
-      line-height: 1.6;
-      margin: 0;
-      padding-left: 22px;
-    }
-    .howto-steps li{ margin: 8px 0; }
-
-    .howto-tip{
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid #1f2a44;
-      background: rgba(17,26,46,.65);
-      font-size: 16px;
-      opacity: .95;
-    }
-
-    /* Чтобы row красиво смотрелся на мобилке */
-    @media (max-width: 520px){
-      #code.room-input{ width: 100%; }
-    }
+    .wrap{max-width:980px;width:100%;padding:20px;}
+    .card{background:rgba(17,26,46,.92);border-radius:16px;padding:18px;border:1px solid #1f2a44;box-shadow:0 10px 30px rgba(0,0,0,.25);}
+    h1{margin:0;text-align:center;font-size:44px;letter-spacing:.5px;}
+    .sub{opacity:.85;text-align:center;margin:6px 0 18px;}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #1f2a44;border-radius:999px;background:rgba(17,26,46,.65);}
+    .presetBtn{padding:8px 12px;border-radius:999px;border:1px solid #1f2a44;background:#475569;color:#fff;font-weight:800;cursor:pointer}
+    .presetBtn.is-active{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+    input{flex:1;min-width:220px;padding:12px 14px;border-radius:12px;border:1px solid #1f2a44;background:#0b1328;color:#fff;font-size:16px;outline:none;}
+    button{padding:10px 14px;border-radius:12px;border:none;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-size:16px;font-weight:800;cursor:pointer}
+    button.secondary{background:#475569;}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+    .modeCard{padding:18px;border-radius:16px;border:1px solid #1f2a44;background:rgba(17,26,46,.75);}
+    .modeCard h2{margin:6px 0 6px;font-size:26px}
+    .modeCard p{margin:0 0 14px;opacity:.85;line-height:1.4}
+    .muted{opacity:.8}
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <div class="card">
+      <h1>100 к 1</h1>
+      <div class="sub">Выберите режим игры и начните за минуту.</div>
 
-      <div class="title-center">
-        <h1>100 к 1</h1>
-        <p>Выберите роль и начните игру.</p>
+      <div class="row" style="justify-content:space-between">
+        <div class="pill">
+          <span>⏱ Время на ответ:</span>
+          <button class="presetBtn" id="t30">30с</button>
+          <button class="presetBtn is-active" id="t60">60с</button>
+          <button class="presetBtn" id="t90">90с</button>
+        </div>
+
+        <div class="pill">
+          <span>📦 Вопросов:</span>
+          <button class="presetBtn is-active" id="q10">10</button>
+          <button class="presetBtn" id="q15">15</button>
+          <button class="presetBtn" id="q20">20</button>
+        </div>
       </div>
 
-      <div class="row">
-        <button id="goHost">👨‍🏫 Ведущий</button>
+      <div class="row" style="margin-top:12px">
+        <input id="codeInput" type="text" placeholder="Код комнаты (например ABC123)" maxlength="12" />
+        <button id="joinByCode" class="secondary">Войти по коду</button>
+        <span class="muted">Если есть код/ссылка от ведущего — заходи так.</span>
       </div>
 
-      <div style="height:14px"></div>
+      <div class="grid">
+        <div class="modeCard">
+          <div style="font-size:28px">🎤</div>
+          <h2>С ведущим</h2>
+          <p>Один человек управляет игрой: запускает вопросы, показывает результаты, завершает игру.</p>
+          <button id="goHost">Режим ведущего</button>
+        </div>
 
-      <div class="row">
-        <input id="code" class="room-input" placeholder="Код комнаты (например ABC123)" />
-        <button id="goPlayer" class="secondary">👤 Игрок</button>
-      </div>
+        <div class="modeCard">
+          <div style="font-size:28px">🤖</div>
+          <h2>Без ведущего</h2>
+          <p>Соло-игра. Игра создаётся автоматически и начнётся сразу после входа.</p>
+          <button id="goSolo">Играть без ведущего</button>
+        </div>
 
-      <div class="muted" style="margin-top:12px;">
-        Если вы игрок — попросите у ведущего код комнаты или ссылку.
-      </div>
-    </div>
-
-    <div class="card howto">
-      <h2>Как играть</h2>
-
-      <p class="howto-lead">
-        <b>Суть игры:</b> ведущий задаёт вопросы, игроки отправляют ответы.
-        За совпадения с “эталоном” начисляются баллы. В конце побеждает тот, у кого больше очков.
-      </p>
-
-      <ol class="howto-steps">
-        <li><b>Ведущий</b> нажимает «Ведущий», создаёт комнату и получает код/ссылку.</li>
-        <li><b>Игроки</b> выбирают «Игрок» и вводят <b>код комнаты</b> (или открывают ссылку).</li>
-        <li>Ведущий запускает вопрос — игроки пишут ответы и нажимают «Отправить».</li>
-        <li>После времени ведущий показывает результаты и запускает следующий вопрос.</li>
-        <li>После всех вопросов появляется <b>победитель</b> и таблица очков.</li>
-      </ol>
-
-      <div class="howto-tip">
-        💡 Совет: отвечайте коротко и по сути (например: “кошка”, а не “это кошка”).
+        <div class="modeCard">
+          <div style="font-size:28px">👥</div>
+          <h2>Без ведущего (2+)</h2>
+          <p>Игра начнётся автоматически, когда подключатся минимум 2 игрока. Максимум без лимита.</p>
+          <button id="goAuto2">Играть 2+ игрока</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    document.getElementById("goHost").onclick = () => {
-      location.href = "/host.html";
+    let selectedTime = 60;
+    let selectedQ = 10;
+
+    const setActive = (btns, activeId) => {
+      btns.forEach(id => document.getElementById(id).classList.toggle("is-active", id === activeId));
     };
 
-    document.getElementById("goPlayer").onclick = () => {
-      const code = document.getElementById("code").value.trim().toUpperCase();
+    document.getElementById("t30").onclick = () => { selectedTime = 30; setActive(["t30","t60","t90"], "t30"); };
+    document.getElementById("t60").onclick = () => { selectedTime = 60; setActive(["t30","t60","t90"], "t60"); };
+    document.getElementById("t90").onclick = () => { selectedTime = 90; setActive(["t30","t60","t90"], "t90"); };
+
+    document.getElementById("q10").onclick = () => { selectedQ = 10; setActive(["q10","q15","q20"], "q10"); };
+    document.getElementById("q15").onclick = () => { selectedQ = 15; setActive(["q10","q15","q20"], "q15"); };
+    document.getElementById("q20").onclick = () => { selectedQ = 20; setActive(["q10","q15","q20"], "q20"); };
+
+    document.getElementById("joinByCode").onclick = () => {
+      const code = (document.getElementById("codeInput").value || "").trim().toUpperCase();
       if (!code) return alert("Введите код комнаты");
-      location.href = `/player.html?code=${encodeURIComponent(code)}`;
+      location.href = `/player.html?code=${encodeURIComponent(code)}&mode=host`;
     };
 
-    document.getElementById("code").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") document.getElementById("goPlayer").click();
-    });
+    document.getElementById("goHost").onclick = () => location.href = "/host.html";
+    document.getElementById("goSolo").onclick = () => location.href = `/player.html?mode=solo&time=${selectedTime}&q=${selectedQ}`;
+    document.getElementById("goAuto2").onclick = () => location.href = `/player.html?mode=auto2&time=${selectedTime}&q=${selectedQ}`;
   </script>
 </body>
 </html>

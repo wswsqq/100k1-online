@@ -1,4 +1,3 @@
-<!-- public/player.html -->
 <!doctype html>
 <html lang="ru">
 <head>
@@ -7,15 +6,7 @@
   <title>100 к 1 — Игрок</title>
 
   <style>
-    body{
-      margin:0;font-family:system-ui,Arial,sans-serif;color:#fff;
-      background:
-        radial-gradient(1200px 800px at 10% 10%, rgba(59,130,246,1), transparent 60%),
-        radial-gradient(1000px 900px at 90% 35%, rgba(168,85,247,1), transparent 65%),
-        radial-gradient(900px 900px at 50% 90%, rgba(217,70,239,0.95), transparent 70%),
-        linear-gradient(180deg,#0b102a,#0b102a);
-      min-height:100vh;
-    }
+    body{margin:0;font-family:system-ui,Arial,sans-serif;color:#fff;background:radial-gradient(1200px 800px at 10% 10%, rgba(59,130,246,1), transparent 60%),radial-gradient(1000px 900px at 90% 35%, rgba(168,85,247,1), transparent 65%),radial-gradient(900px 900px at 50% 90%, rgba(217,70,239,0.95), transparent 70%),linear-gradient(180deg,#0b102a,#0b102a);min-height:100vh;}
     .wrap{max-width:780px;margin:0 auto;padding:20px;}
     .titleRow{display:flex;align-items:center;justify-content:center;margin:0 0 14px;}
     h1{margin:0;text-align:center;}
@@ -27,21 +18,13 @@
     button.secondary{background:#475569;}
     button.violet{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
     button:disabled{opacity:.45;cursor:not-allowed;}
-    input[type="text"]{
-      width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid #1f2a44;
-      background:#0b1328;color:#fff;font-size:16px;outline:none;
-    }
+    input[type="text"]{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid #1f2a44;background:#0b1328;color:#fff;font-size:16px;outline:none;}
     table{width:100%;border-collapse:collapse;}
     th,td{padding:8px;border-bottom:1px solid #1f2a44;text-align:left;}
     .hidden{display:none;}
-
     .timeBar{width:280px;height:12px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);overflow:hidden;}
     .timeBarFill{height:100%;width:100%;border-radius:999px;transition:width .35s linear,background-color .25s ease;}
-    .round-pill{
-      display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:999px;
-      border:1px solid #1f2a44;background:rgba(17,26,46,.65);font-weight:900;min-width:54px;
-    }
-
+    .round-pill{display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:999px;border:1px solid #1f2a44;background:rgba(17,26,46,.65);font-weight:900;min-width:54px;}
     .winner-hero{text-align:center;padding:18px 12px;}
     .cup{font-size:76px;line-height:1;display:inline-block;filter:drop-shadow(0 12px 28px rgba(0,0,0,.55));transform:translateY(10px) scale(.9);opacity:0;}
     .winner-title{margin:10px 0 0;font-size:30px;font-weight:800;opacity:0;transform:translateY(8px);}
@@ -60,26 +43,16 @@
     @keyframes popIn{to{opacity:1;transform:translateY(0) scale(1);}}
     @keyframes slideUp{to{opacity:1;transform:translateY(0);}}
     @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-
     #confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;display:none;}
-
-    /* volume stable */
-    #volumeBox{
-      position:fixed;top:16px;right:20px;display:flex;align-items:center;gap:10px;
-      padding:10px 14px;background:rgba(17,26,46,.95);border-radius:14px;border:1px solid #1f2a44;
-      z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.35);
-    }
+    #volumeBox{position:fixed;top:16px;right:20px;display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(17,26,46,.95);border-radius:14px;border:1px solid #1f2a44;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.35);}
     #volumeBox .vol-icon{width:22px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;}
     #volumeBox input[type="range"]{width:180px;height:6px;cursor:pointer;}
     #volumeBox #volLabel{min-width:52px;text-align:right;font-weight:700;font-size:16px;opacity:.95;}
-    #volumeBox button.mute-btn{
-      width:56px;height:40px;padding:0;
-      display:inline-flex;align-items:center;justify-content:center;
-      border-radius:12px;font-size:18px;line-height:1;border:1px solid #1f2a44;
-      cursor:pointer;user-select:none;transition:transform .15s ease,filter .15s ease,box-shadow .15s ease;
-    }
+    #volumeBox button.mute-btn{width:56px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;font-size:18px;line-height:1;border:1px solid #1f2a44;cursor:pointer;user-select:none;transition:transform .15s ease,filter .15s ease,box-shadow .15s ease;background:#475569;color:#fff;}
     #volumeBox button.mute-btn.is-on{background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 10px 22px rgba(139,92,246,.35);}
     #volumeBox button.mute-btn.is-off{background:#475569;box-shadow:none;}
+    .copyLink{cursor:pointer;user-select:none;font-size:18px;opacity:.9}
+    .copyLink:hover{opacity:1;transform:scale(1.08)}
   </style>
 </head>
 
@@ -97,19 +70,30 @@
     <div class="titleRow"><h1 id="playerTitle">Игрок</h1></div>
 
     <div class="card" id="joinCard">
-      <div class="muted" style="margin-bottom:10px;">Введите имя и войдите в игру</div>
+      <div class="muted" id="joinHint" style="margin-bottom:10px;">Введите имя и войдите в игру</div>
       <input id="name" type="text" placeholder="Ваше имя" maxlength="24" />
+
       <div class="row" style="margin-top:10px;">
         <button id="joinBtn">Войти в игру</button>
         <span class="badge" id="roomBadge">Комната: —</span>
         <span class="badge" id="statusBadge">Не в игре</span>
       </div>
+
+      <div class="row" id="autoRoomRow" style="margin-top:10px;display:none;">
+        <span class="badge" id="autoRoomCode">Комната: —</span>
+        <span class="badge" id="autoRoomLink">Ссылка: —</span>
+        <span class="copyLink" id="copyBtn" title="Скопировать ссылку">📋</span>
+      </div>
+
+      <div class="muted" id="autoWaitHint" style="margin-top:10px;display:none;">—</div>
     </div>
 
     <div id="gameScreen" class="hidden">
       <div class="card">
         <div class="row">
           <span class="badge" id="qBadge">Вопрос: —</span>
+          <!-- ✅ Добавили бейдж комнаты в игровом экране (показываем только в mode=auto2) -->
+          <span class="badge hidden" id="roomBadgeInGame">Комната: —</span>
           <div class="timeBar"><div id="timeBarFill" class="timeBarFill"></div></div>
           <span id="roundPill" class="round-pill">—</span>
         </div>
@@ -145,7 +129,7 @@
         <div class="podium" id="podium"></div>
 
         <div class="muted" style="margin-top:10px;">
-          Ждите: ведущий нажмёт «Новая игра», и начнётся следующий опрос.
+          Если хотите сыграть ещё раз — вернитесь на главную и запустите новый режим.
         </div>
       </div>
 
@@ -166,6 +150,13 @@
     const roomBadge = document.getElementById("roomBadge");
     const statusBadge = document.getElementById("statusBadge");
     const playerTitle = document.getElementById("playerTitle");
+    const joinHint = document.getElementById("joinHint");
+
+    const autoRoomRow = document.getElementById("autoRoomRow");
+    const autoRoomCode = document.getElementById("autoRoomCode");
+    const autoRoomLink = document.getElementById("autoRoomLink");
+    const autoWaitHint = document.getElementById("autoWaitHint");
+    const copyBtn = document.getElementById("copyBtn");
 
     const gameScreen = document.getElementById("gameScreen");
     const winnerScreen = document.getElementById("winnerScreen");
@@ -188,15 +179,31 @@
     const winnerNameEl = document.getElementById("winnerName");
     const winnerScoreEl = document.getElementById("winnerScore");
 
+    // ✅ добавили элемент бейджа комнаты в игре
+    const roomBadgeInGame = document.getElementById("roomBadgeInGame");
+
     const params = new URLSearchParams(location.search);
-    const roomCode = (params.get("code") || "").toUpperCase();
+
+    const mode = (params.get("mode") || "host").toLowerCase(); // host | solo | auto2
+    let roomCode = (params.get("code") || "").toUpperCase();
+
+    const timeSetting = Number(params.get("time") || 60);
+    const qSetting = Number(params.get("q") || 10);
+
+    function clampInt(v, min, max, def){
+      const n = Number(v);
+      if (!Number.isFinite(n)) return def;
+      return Math.max(min, Math.min(max, Math.floor(n)));
+    }
+    const chosenTime = clampInt(timeSetting, 10, 300, 60);
+    const chosenQ = clampInt(qSetting, 10, 20, 10);
+
     roomBadge.textContent = roomCode ? `Комната: ${roomCode}` : "Комната: —";
 
     let joined = false;
     let answeredThisQuestion = false;
     let finishHandledFor = null;
 
-    // sounds + volume
     const winAudio = new Audio("/sounds/win.mp3");
     const drumAudio = new Audio("/sounds/drum.mp3");
     winAudio.preload = "auto"; drumAudio.preload = "auto";
@@ -213,7 +220,6 @@
         drumEndedHandler = null;
       }
     }
-
     function stopSounds(){
       cancelFinishSequence();
       try { winAudio.pause(); winAudio.currentTime = 0; } catch(e){}
@@ -244,16 +250,13 @@
     volEl.addEventListener("input", () => { muted = false; applyVolume(); });
     muteBtn.addEventListener("click", () => { muted = !muted; applyVolume(); });
 
-    // audio warmup
     document.addEventListener("click", () => {
       drumAudio.play().then(()=>{drumAudio.pause();drumAudio.currentTime=0;}).catch(()=>{});
       winAudio.play().then(()=>{winAudio.pause();winAudio.currentTime=0;}).catch(()=>{});
     }, { once:true });
 
-    // confetti
     const confettiCanvas = document.getElementById("confetti");
     const ctx = confettiCanvas.getContext("2d");
-
     function resizeConfetti(){
       confettiCanvas.width = window.innerWidth * devicePixelRatio;
       confettiCanvas.height = window.innerHeight * devicePixelRatio;
@@ -269,22 +272,10 @@
       const W = window.innerWidth, H = window.innerHeight;
       const particles = [];
       const count = 180;
-
       for (let i=0;i<count;i++){
-        particles.push({
-          x: Math.random()*W,
-          y: -20 - Math.random()*H*0.3,
-          vx: (Math.random()*2-1) * 2.2,
-          vy: 3 + Math.random()*4.5,
-          size: 4 + Math.random()*6,
-          rot: Math.random()*Math.PI,
-          vr: (Math.random()*2-1)*0.2,
-          hue: Math.floor(Math.random()*360),
-          life: 0
-        });
+        particles.push({x:Math.random()*W,y:-20-Math.random()*H*0.3,vx:(Math.random()*2-1)*2.2,vy:3+Math.random()*4.5,size:4+Math.random()*6,rot:Math.random()*Math.PI,vr:(Math.random()*2-1)*0.2,hue:Math.floor(Math.random()*360),life:0});
       }
       const t0 = performance.now();
-
       function frame(t){
         const dt = (t - t0);
         ctx.clearRect(0,0,W,H);
@@ -292,14 +283,12 @@
           p.x += p.vx; p.y += p.vy; p.rot += p.vr;
           p.vy += 0.02; p.vx *= 0.995; p.life += 1;
           const sway = Math.sin(p.life*0.1) * 0.6;
-
           ctx.save();
           ctx.translate(p.x, p.y);
           ctx.rotate(p.rot);
           ctx.fillStyle = `hsl(${p.hue} 90% 60%)`;
           ctx.fillRect(-p.size/2 + sway, -p.size/2, p.size, p.size);
           ctx.restore();
-
           if (p.y > H + 30){
             p.y = -20; p.x = Math.random()*W;
             p.vy = 3 + Math.random()*4.5;
@@ -316,12 +305,10 @@
       const d = Math.max(1, Number(duration || 60));
       const t = Math.max(0, Number(timeLeft || 0));
       const ratio = clamp01(t / d);
-
       timeBarFill.style.width = `${Math.round(ratio * 100)}%`;
       if (ratio > 0.66) timeBarFill.style.backgroundColor = "#22c55e";
       else if (ratio > 0.33) timeBarFill.style.backgroundColor = "#f59e0b";
       else timeBarFill.style.backgroundColor = "#ef4444";
-
       roundPill.textContent = `${t}с`;
     }
 
@@ -348,31 +335,12 @@
       sendBtn.disabled = !on || answeredThisQuestion;
     }
 
-    joinBtn.onclick = () => {
-      stopSounds();
-
-      const name = (nameEl.value || "").trim();
-      if (!roomCode) return alert("Нет кода комнаты в ссылке!");
-      socket.emit("player:join", { code: roomCode, name });
-
-      setPlayerTitle(name);
-
-      joinBtn.disabled = true;
-      joinBtn.textContent = "Вы в игре ✅";
-      statusBadge.textContent = "Вы в игре ✅";
-      joined = true;
-
-      joinCard.classList.add("hidden");
-      showGame();
-    };
-
     clearBtn.onclick = () => { answerEl.value = ""; };
 
     sendBtn.onclick = () => {
       if (!joined || answeredThisQuestion) return;
       const text = (answerEl.value || "").trim();
       if (!text) return;
-
       socket.emit("player:answer", { code: roomCode, text });
       answeredThisQuestion = true;
       sendBtn.disabled = true;
@@ -386,18 +354,13 @@
     function runFinishSequence(state){
       if (finishHandledFor === roomCode) { showWinner(); return; }
       finishHandledFor = roomCode;
-
       const token = ++finishSeqToken;
-
       const afterDrum = () => {
         if (token !== finishSeqToken) return;
-
         const players = state.players || [];
         const top = players[0];
-
         winnerNameEl.textContent = top ? `🥇 ${top.name}` : "—";
         winnerScoreEl.textContent = `Очки: ${top ? top.score : 0}`;
-
         const top3 = players.slice(0,3);
         const medals = ["🥇","🥈","🥉"];
         podiumEl.innerHTML = "";
@@ -407,37 +370,24 @@
           const score = p ? p.score : 0;
           const div = document.createElement("div");
           div.className = "p";
-          div.innerHTML = `
-            <div class="big">${medals[i]} ${i+1} место</div>
-            <div style="margin-top:6px;">Игрок: <b>${name}</b></div>
-            <div style="margin-top:4px;">Очки: <b>${score}</b></div>
-          `;
+          div.innerHTML = `<div class="big">${medals[i]} ${i+1} место</div><div style="margin-top:6px;">Игрок: <b>${name}</b></div><div style="margin-top:4px;">Очки: <b>${score}</b></div>`;
           podiumEl.appendChild(div);
         }
-
         finalTableEl.innerHTML = "";
         players.forEach((p, idx) => {
           const tr = document.createElement("tr");
           tr.innerHTML = `<td>${idx+1}</td><td>${p.name}</td><td>${p.score}</td>`;
           finalTableEl.appendChild(tr);
         });
-
         showWinner();
         try { winAudio.currentTime = 0; winAudio.play().catch(()=>{}); } catch(e){}
         startConfetti(3000);
       };
 
-      drumEndedHandler = () => {
-        drumEndedHandler = null;
-        afterDrum();
-      };
+      drumEndedHandler = () => { drumEndedHandler = null; afterDrum(); };
       drumAudio.addEventListener("ended", drumEndedHandler, { once:true });
 
-      const durMs =
-        Number.isFinite(drumAudio.duration) && drumAudio.duration > 0
-          ? Math.ceil(drumAudio.duration * 1000)
-          : 1400;
-
+      const durMs = Number.isFinite(drumAudio.duration) && drumAudio.duration > 0 ? Math.ceil(drumAudio.duration * 1000) : 1400;
       finishFallbackTimer = setTimeout(() => {
         finishFallbackTimer = null;
         if (drumEndedHandler){
@@ -472,9 +422,95 @@
       }
     }
 
+    function setupJoinUI(){
+      if (mode === "solo") {
+        joinHint.textContent = `Соло-режим: игра начнётся сразу после входа (время: ${chosenTime}с, вопросов: ${chosenQ}).`;
+        roomBadge.textContent = "Режим: Соло";
+        statusBadge.textContent = "Не в игре";
+      } else if (mode === "auto2") {
+        joinHint.textContent = `Режим 2+: создадим комнату и покажем код/ссылку. Игра стартует при 2+ игроках.`;
+        roomBadge.textContent = "Режим: 2+";
+        statusBadge.textContent = "Не в игре";
+      } else {
+        joinHint.textContent = "Введите имя и войдите в игру";
+        roomBadge.textContent = roomCode ? `Комната: ${roomCode}` : "Комната: —";
+      }
+    }
+
+    setupJoinUI();
+
+    copyBtn.onclick = async () => {
+      const txt = autoRoomLink.dataset.value || "";
+      if (!txt) return;
+      try {
+        await navigator.clipboard.writeText(txt);
+        copyBtn.textContent = "✅";
+        setTimeout(()=>copyBtn.textContent="📋", 900);
+      } catch(e) {
+        alert("Не удалось скопировать. Скопируйте вручную: " + txt);
+      }
+    };
+
+    joinBtn.onclick = () => {
+      stopSounds();
+      const name = (nameEl.value || "").trim() || "Игрок";
+      setPlayerTitle(name);
+      joinBtn.disabled = true;
+      joinBtn.textContent = "Вы в игре ✅";
+      statusBadge.textContent = "Вы в игре ✅";
+      joined = true;
+      joinCard.classList.add("hidden");
+      showGame();
+
+      // ✅ если это auto2 и код уже известен — сразу показать в игре
+      if (mode === "auto2" && roomCode) {
+        roomBadgeInGame.classList.remove("hidden");
+        roomBadgeInGame.textContent = `Комната: ${roomCode}`;
+      }
+
+      if (mode === "solo" || mode === "auto2") {
+        socket.emit("auto:create", { mode, name, seconds: chosenTime, count: chosenQ });
+        return;
+      }
+      if (!roomCode) {
+        alert("Нет кода комнаты. Вернитесь на главную и зайдите по коду.");
+        return;
+      }
+      socket.emit("player:join", { code: roomCode, name });
+    };
+
+    socket.on("auto:created", ({ code, mode: createdMode }) => {
+      roomCode = (code || "").toUpperCase();
+
+      // ✅ сразу показать комнату в игровом экране (только auto2)
+      if (mode === "auto2") {
+        roomBadgeInGame.classList.remove("hidden");
+        roomBadgeInGame.textContent = `Комната: ${roomCode}`;
+      }
+
+      const link = `${location.origin}/player.html?code=${roomCode}&mode=host`;
+      autoRoomRow.style.display = "flex";
+      autoRoomCode.textContent = `Комната: ${roomCode}`;
+      autoRoomLink.textContent = `Ссылка: ${link}`;
+      autoRoomLink.dataset.value = link;
+
+      autoWaitHint.style.display = "block";
+      if (createdMode === "auto2") {
+        autoWaitHint.textContent = "Ждём ещё минимум 1 игрока (2+). Отправьте другу код или ссылку.";
+      } else {
+        autoWaitHint.textContent = "Игра начнётся автоматически.";
+      }
+    });
+
     socket.on("room:update", (state) => {
       if (!state) return;
       if (state.code && roomCode && state.code !== roomCode) return;
+
+      // ✅ если это auto2 — держим бейдж комнаты видимым
+      if (mode === "auto2" && roomCode) {
+        roomBadgeInGame.classList.remove("hidden");
+        roomBadgeInGame.textContent = `Комната: ${roomCode}`;
+      }
 
       playersEl.innerHTML = "";
       (state.players || []).forEach(p => {
@@ -483,18 +519,23 @@
         playersEl.appendChild(tr);
       });
 
-      const dur = state.questionDuration ?? 60;
+      const dur = state.questionDuration ?? chosenTime;
 
       if (state.phase === "lobby") {
         stopSounds();
         finishHandledFor = null;
-
         showGame();
         qBadge.textContent = "Вопрос: —";
-        questionText.textContent = "Ожидание начала опроса…";
+
+        if (state.mode === "auto2" && state.playerCount < (state.minPlayersToStart || 2)) {
+          questionText.textContent = `Ждём игроков... Нужно минимум ${state.minPlayersToStart || 2}. Сейчас: ${state.playerCount}`;
+          sendHint.textContent = "Ждите, пока подключатся игроки…";
+        } else {
+          questionText.textContent = "Ожидание начала опроса…";
+          sendHint.textContent = "Ждите начала вопроса…";
+        }
 
         answeredThisQuestion = false;
-        sendHint.textContent = "Ждите начала вопроса…";
         setAnswerEnabled(false);
 
         updateTimeUI(0, dur);
@@ -518,7 +559,7 @@
       if (state.phase === "results") {
         showGame();
         qBadge.textContent = `Результаты (${state.questionNumber}/${state.totalQuestions})`;
-        questionText.textContent = "Результаты у ведущего. Ждите следующий вопрос…";
+        questionText.textContent = "Результаты. Ждите следующий вопрос…";
 
         sendHint.textContent = "Ждите следующий вопрос…";
         setAnswerEnabled(false);
@@ -535,13 +576,11 @@
       }
     });
 
-    if (!roomCode) {
+    setAnswerEnabled(false);
+
+    if (mode === "host" && !roomCode) {
       statusBadge.textContent = "Нет кода комнаты";
-      joinBtn.disabled = true;
-      joinBtn.textContent = "Нужна ссылка ведущего";
-    } else {
-      // до входа — нельзя отправлять
-      setAnswerEnabled(false);
+      joinBtn.textContent = "Нужен код комнаты";
     }
   </script>
 </body>
