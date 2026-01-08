@@ -2,6 +2,8 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const { nanoid } = require("nanoid");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
@@ -9,36 +11,26 @@ const io = new Server(server);
 
 app.use(express.static("public"));
 
-/* ===== Questions (можно расширять) ===== */
-const QUESTIONS = [
-  { q: "Назовите популярный фрукт", a: [{ text: "яблоко", points: 1 }, { text: "банан", points: 2 }, { text: "апельсин", points: 3 }, { text: "виноград", points: 4 }, { text: "манго", points: 5 }] },
-  { q: "Назовите вид транспорта", a: [{ text: "автобус", points: 1 }, { text: "машина", points: 2 }, { text: "поезд", points: 3 }, { text: "самолет", points: 4 }, { text: "метро", points: 5 }] },
-  { q: "Назовите школьный предмет", a: [{ text: "математика", points: 1 }, { text: "русский язык", points: 2 }, { text: "история", points: 3 }, { text: "география", points: 4 }, { text: "физика", points: 5 }] },
-  { q: "Назовите домашнее животное", a: [{ text: "кот", points: 1 }, { text: "собака", points: 2 }, { text: "хомяк", points: 3 }, { text: "попугай", points: 4 }, { text: "рыбки", points: 5 }] },
-  { q: "Назовите напиток", a: [{ text: "чай", points: 1 }, { text: "кофе", points: 2 }, { text: "вода", points: 3 }, { text: "сок", points: 4 }, { text: "лимонад", points: 5 }] },
-  { q: "Назовите профессию", a: [{ text: "врач", points: 1 }, { text: "учитель", points: 2 }, { text: "повар", points: 3 }, { text: "инженер", points: 4 }, { text: "водитель", points: 5 }] },
-  { q: "Назовите время года", a: [{ text: "лето", points: 1 }, { text: "зима", points: 2 }, { text: "весна", points: 3 }, { text: "осень", points: 4 }, { text: "дождь", points: 5 }] },
-  { q: "Назовите цвет", a: [{ text: "красный", points: 1 }, { text: "синий", points: 2 }, { text: "зелёный", points: 3 }, { text: "чёрный", points: 4 }, { text: "белый", points: 5 }] },
-  { q: "Назовите популярное блюдо", a: [{ text: "пицца", points: 1 }, { text: "бургер", points: 2 }, { text: "пельмени", points: 3 }, { text: "суп", points: 4 }, { text: "салат", points: 5 }] },
-  { q: "Назовите часть тела", a: [{ text: "рука", points: 1 }, { text: "нога", points: 2 }, { text: "голова", points: 3 }, { text: "глаз", points: 4 }, { text: "сердце", points: 5 }] },
-  { q: "Назовите предмет мебели", a: [{ text: "стол", points: 1 }, { text: "стул", points: 2 }, { text: "кровать", points: 3 }, { text: "шкаф", points: 4 }, { text: "диван", points: 5 }] },
-  { q: "Назовите бытовую технику", a: [{ text: "холодильник", points: 1 }, { text: "телевизор", points: 2 }, { text: "пылесос", points: 3 }, { text: "микроволновка", points: 4 }, { text: "стиральная машина", points: 5 }] },
-  { q: "Назовите вид спорта", a: [{ text: "футбол", points: 1 }, { text: "баскетбол", points: 2 }, { text: "хоккей", points: 3 }, { text: "теннис", points: 4 }, { text: "плавание", points: 5 }] },
-  { q: "Назовите город в России", a: [{ text: "москва", points: 1 }, { text: "санкт-петербург", points: 2 }, { text: "казань", points: 3 }, { text: "новосибирск", points: 4 }, { text: "екатеринбург", points: 5 }] },
-  { q: "Назовите музыкальный инструмент", a: [{ text: "гитара", points: 1 }, { text: "пианино", points: 2 }, { text: "барабаны", points: 3 }, { text: "скрипка", points: 4 }, { text: "флейта", points: 5 }] },
-  { q: "Назовите приложение в телефоне", a: [{ text: "ютуб", points: 1 }, { text: "телеграм", points: 2 }, { text: "вконтакте", points: 3 }, { text: "инстаграм", points: 4 }, { text: "тик ток", points: 5 }] },
-  { q: "Назовите школьную принадлежность", a: [{ text: "тетрадь", points: 1 }, { text: "ручка", points: 2 }, { text: "карандаш", points: 3 }, { text: "линейка", points: 4 }, { text: "дневник", points: 5 }] },
-  { q: "Назовите комнату в доме", a: [{ text: "кухня", points: 1 }, { text: "спальня", points: 2 }, { text: "гостиная", points: 3 }, { text: "ванная", points: 4 }, { text: "коридор", points: 5 }] },
-  { q: "Назовите праздник", a: [{ text: "новый год", points: 1 }, { text: "день рождения", points: 2 }, { text: "8 марта", points: 3 }, { text: "23 февраля", points: 4 }, { text: "пасха", points: 5 }] },
-  { q: "Назовите часть дома", a: [{ text: "дверь", points: 1 }, { text: "окно", points: 2 }, { text: "стена", points: 3 }, { text: "крыша", points: 4 }, { text: "пол", points: 5 }] },
+/* ===== Questions (из questions.json) ===== */
+const QUESTIONS_PATH = path.join(__dirname, "questions.json");
 
-  // + ещё чуть-чуть, чтобы было разнообразнее
-  { q: "Назовите животное из леса", a: [{ text: "волк", points: 1 }, { text: "лиса", points: 2 }, { text: "медведь", points: 3 }, { text: "заяц", points: 4 }, { text: "лось", points: 5 }] },
-  { q: "Назовите предмет в школе", a: [{ text: "доска", points: 1 }, { text: "парта", points: 2 }, { text: "учебник", points: 3 }, { text: "мел", points: 4 }, { text: "портфель", points: 5 }] },
-  { q: "Назовите популярный мессенджер", a: [{ text: "телеграм", points: 1 }, { text: "ватсап", points: 2 }, { text: "вайбер", points: 3 }, { text: "дискорд", points: 4 }, { text: "сигнал", points: 5 }] },
-  { q: "Назовите предмет на кухне", a: [{ text: "ложка", points: 1 }, { text: "вилка", points: 2 }, { text: "тарелка", points: 3 }, { text: "нож", points: 4 }, { text: "кастрюля", points: 5 }] },
-  { q: "Назовите сладость", a: [{ text: "шоколад", points: 1 }, { text: "конфета", points: 2 }, { text: "печенье", points: 3 }, { text: "торт", points: 4 }, { text: "мороженое", points: 5 }] },
-];
+function loadQuestions() {
+  try {
+    const raw = fs.readFileSync(QUESTIONS_PATH, "utf-8");
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data)) throw new Error("questions.json должен быть массивом");
+    return data;
+  } catch (e) {
+    console.error("Не удалось загрузить questions.json:", e.message);
+    return [];
+  }
+}
+
+let QUESTIONS = loadQuestions();
+
+if (QUESTIONS.length < 10) {
+  console.warn("В questions.json мало вопросов (нужно хотя бы 10). Сейчас:", QUESTIONS.length);
+}
 
 const rooms = new Map();
 
@@ -62,7 +54,13 @@ function clampInt(v, min, max, def) {
 }
 
 function buildDeck(limit) {
+  // перечитаем вопросы при построении новой колоды (чтобы обновления файла подхватывались после рестарта/правки)
+  // Если хочешь подхватывать изменения без перезапуска — можно оставить так, оно будет читать файл каждый раз.
+  const fresh = loadQuestions();
+  if (fresh.length >= 10) QUESTIONS = fresh;
+
   const lim = clampInt(limit, 10, 20, 10);
+  if (!QUESTIONS.length) return [];
   return shuffle(QUESTIONS).slice(0, lim);
 }
 
